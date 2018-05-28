@@ -25,24 +25,61 @@ void printfile();
 
 int main()
 {
+	string stdname = "";
+	string mpiname = "";
 	int num_thread;
 	int num_process;
-	int repetitions = 30;
+	int repetitions;
 	string command = "";
+	string compile_command = "";
 	std::list<int> num_thread_values;
 	std::list<int> num_process_values;
-	num_thread_values.push_back(1);
-	num_thread_values.push_back(2);
-	num_thread_values.push_back(4);
-	num_thread_values.push_back(8);
-	num_thread_values.push_back(16);
-	num_thread_values.push_back(32);
-	num_process_values.push_back(1);
-	num_process_values.push_back(2);
-	num_process_values.push_back(4);
-	num_process_values.push_back(8);
-	num_process_values.push_back(16);
-	num_process_values.push_back(32);
+
+	ifstream config_file;
+	config_file.open("../../target/target_data.txt");
+	string line;
+	if(config_file.is_open())
+	{
+		getline(config_file, line); //1
+
+		getline(config_file, line); //2
+		repetitions = stoi(line, nullptr, 10);
+
+		getline(config_file, line); //3
+
+		getline(config_file, stdname); //4
+
+		getline(config_file, line); //5
+
+		getline(config_file, mpiname); //6
+
+		getline(config_file, line); //7
+
+		getline(config_file, line); //8
+		int values_number = stoi(line,nullptr, 10);
+
+		for(int i = 0; i < values_number; i++) //9-14
+		{
+			getline(config_file, line);
+			num_thread_values.push_back(stoi(line, nullptr, 10));
+		}
+
+		getline(config_file, line); //15
+
+		getline(config_file, line); //16
+		values_number = stoi(line,nullptr, 10);
+
+		for(int i = 0; i < values_number; i++) //17-22
+		{
+			getline(config_file, line);
+			num_process_values.push_back(stoi(line, nullptr, 10));
+		}
+		config_file.close();
+	}
+	else
+	{
+		return -1;
+	}
 	for(std::list<int>::iterator k = num_process_values.begin(); k != num_process_values.end(); ++k)
 	{
 		for(std::list<int>::iterator j = num_thread_values.begin(); j != num_thread_values.end(); ++j)
@@ -55,25 +92,30 @@ int main()
 				if(num_process == 1)
 				{
 					command = "";
-					command += "./matrix.out ";
+					command += "./target.out ";
 					command += std::to_string(num_thread);
+					compile_command = "";
 					if(num_thread == 1)
-						system("g++ -o matrix.out matrix.cpp");
+						compile_command += "g++ -o target.out ../../target/";
 					else
-						system("g++ -fopenmp -o matrix.out matrix.cpp");
+						compile_command += "g++ -fopenmp -o target.out ../../target/";
+					compile_command += stdname;
 				}
 				else
 				{
 					command = "";
 					command += "mpirun -np ";
 					command += to_string(num_process);
-					command += " matrix.out ";
+					command += " target.out ";
 					command += to_string(num_thread);
+					compile_command = "";
 					if(num_thread == 1)
-						system("mpic++ -o matrix.out matrixmpi.cpp");
+						compile_command += "mpic++ -o target.out ../../target/";
 					else
-						system("mpic++ -fopenmp -o matrix.out matrixmpi.cpp");
+						compile_command += "mpic++ -fopenmp -o target.out ../../target/";
+					compile_command += mpiname;
 				}
+				system(compile_command.c_str());
 				/* chrono way
 				auto start = std::chrono::system_clock::now();
 				system(command.c_str());
@@ -92,7 +134,7 @@ int main()
 				gettimeofday(&tv1, NULL);
 				system(command.c_str());
 				gettimeofday(&tv2, NULL);
-				add_to_file(num_thread, num_process, ((double) (tv2.tv_usec - tv1.tv_usec)) / 1000000 + ((double)(tv2.tv_sec - tv1.tv_sec)));
+				add_to_file(num_thread, num_process, ((double) (tv2.tv_usec - tv1.tv_usec)) / 1000 + ((double)(tv2.tv_sec - tv1.tv_sec)) * 1000);
 			}
 
 		}
@@ -126,9 +168,9 @@ void add_to_file(int num_thread, int num_process, double time)
 void printfile()
 {
 	ofstream file;
-	file.open("oplist.conf");
+	file.open("../../conf/oplist.conf");
 	file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-	file << "<points xmlns=\"http://www.multicube.eu/\" version=\"1.3\" block=\"foo\"\n>";
+	file << "<points xmlns=\"http://www.multicube.eu/\" version=\"1.3\" block=\"bar\">\n";
 	for(std::list<list_entry>::iterator it = data.begin(); it != data.end(); ++it)
 	{
 		file << "\t<point>\n";
