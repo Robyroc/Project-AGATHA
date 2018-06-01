@@ -1,0 +1,23 @@
+§The following line contains the number of repetitions we want to consider
+30
+§The following line contains the name of the file without MPI support
+matrix.cpp
+§The following line contains the name of the file with MPI support
+matrixmpi.cpp
+§The next lines contains the number of the knob values followed by their respective value
+6
+1
+2
+4
+8
+16
+32
+§Same as above
+6
+1
+2
+4
+8
+16
+32
+§Leave an empty line at the bottom
