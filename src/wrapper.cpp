@@ -50,9 +50,9 @@ int main()
 			command += std::to_string(num_thread);
 			compile_command = "";
 			if(num_thread == 1)
-				compile_command += "g++ -o target.out ../target/";
+				compile_command += "g++ -std=c++11 -o target.out ../target/";
 			else
-				compile_command += "g++ -fopenmp -o target.out ../target/";
+				compile_command += "g++ -std=c++11 -fopenmp -o target.out ../target/";
 			compile_command += stdname;
 		}
 		else
@@ -64,9 +64,9 @@ int main()
 			command += std::to_string(num_thread);
 			compile_command = "";
 			if(num_thread == 1)
-				compile_command += "mpic++ -o target.out ../target/";
+				compile_command += "mpic++ -std=c++11 -o target.out ../target/";
 			else
-				compile_command += "mpic++ -fopenmp -o target.out ../target/";
+				compile_command += "mpic++ -std=c++11 -fopenmp -o target.out ../target/";
 			compile_command += mpiname;
 		}
 		system(compile_command.c_str());
