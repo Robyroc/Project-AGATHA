@@ -2,7 +2,7 @@ git clone https://gitlab.com/margot_project/core.git
 cd core
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/roberto/Documents/MPI/margot/matrix/core ..
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/roberto/Documents/mpi/OpenMp-MPI-Autotuning-mARGOt/core ..
 make
 make install
 cd ..

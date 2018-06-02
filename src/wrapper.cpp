@@ -18,62 +18,45 @@ int main()
 	string mpiname = "";
 	int num_thread = 1;
 	int num_process = 1;
+	int type_bind = 1;
 	int repetitions;
 	string command = "";
-	string compile_command = "";
-	ifstream config_file;
-	config_file.open("../target/target_data.txt");
-	string line;
-	if(config_file.is_open())
+	string actual_type_bind;
+
+	if(margot::bar::update(num_thread, num_process, type_bind))
+		margot::bar::manager.configuration_applied();
+
+	switch(type_bind)
 	{
-		getline(config_file, line);
-		getline(config_file, line);
-		repetitions = stoi(line, nullptr, 10);
-		getline(config_file, line);
-		getline(config_file, stdname);
-		getline(config_file, line);
-		getline(config_file, mpiname);
-		config_file.close();
+		case 1:
+			actual_type_bind = string("SPREAD");
+			break;
+		case 2:
+			actual_type_bind = string("CLOSE");
+			break;
+		case 3:
+			actual_type_bind = string("MASTER");
+			break;
+		case 4:
+			actual_type_bind = string("FALSE");
+			break;
+		default:
+			actual_type_bind = string("TRUE");
+			break;
 	}
-	else
-	{
-		return -1;
-	}
-	for(int i = 0; i < repetitions; i++)
-	{
-		if(margot::bar::update(num_thread, num_process))
-			margot::bar::manager.configuration_applied();
-		if(num_process == 1)
-		{
-			command = "";
-			command += "./target.out ";
-			command += std::to_string(num_thread);
-			compile_command = "";
-			if(num_thread == 1)
-				compile_command += "g++ -std=c++11 -o target.out ../target/";
-			else
-				compile_command += "g++ -std=c++11 -fopenmp -o target.out ../target/";
-			compile_command += stdname;
-		}
-		else
-		{
-			command = "";
-			command += "mpirun -np ";
-			command += std::to_string(num_process);
-			command += " target.out ";
-			command += std::to_string(num_thread);
-			compile_command = "";
-			if(num_thread == 1)
-				compile_command += "mpic++ -std=c++11 -o target.out ../target/";
-			else
-				compile_command += "mpic++ -std=c++11 -fopenmp -o target.out ../target/";
-			compile_command += mpiname;
-		}
-		system(compile_command.c_str());
-		margot::bar::start_monitor();
-		system(command.c_str());
-		margot::bar::stop_monitor();
-		margot::bar::log();
-	}
+
+	command += "mpirun -np ";
+	command += std::to_string(num_process);
+	command += " ./target.out ";
+	command += std::to_string(num_thread);
+	
+	//setup global variables
+	system((string("export OMP_NUM_THREADS=") + to_string(num_thread)).c_str());
+	system((string("export OMP_PROC_BIND=") + actual_type_bind).c_str());
+
+	margot::bar::start_monitor();
+	system(command.c_str());
+	margot::bar::stop_monitor();
+	margot::bar::log();
 	system("rm target.out");
 }

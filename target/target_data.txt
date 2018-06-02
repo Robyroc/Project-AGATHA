@@ -1,9 +1,5 @@
-§The following line contains the number of repetitions we want to consider
-30
-§The following line contains the name of the file without MPI support
-matrix.cpp
-§The following line contains the name of the file with MPI support
-matrixmpi.cpp
+§The following line contains the name of the script file which has to compile the source
+compile.sh
 §The next lines contains the number of the knob values followed by their respective value
 6
 1
@@ -20,4 +16,11 @@ matrixmpi.cpp
 8
 16
 32
-§Leave an empty line at the bottom
+§Same for binding properties
+4
+1
+2
+3
+4
+§The following line contains the number of repetitions we want to consider
+1
