@@ -14,11 +14,6 @@ int main(int argc, char **argv)
 	int mC[N][N];
 	int mCtemp[N][N];
 	int threads;	
-	threads = stoi(string(argv[1]),nullptr, 10);
-	#ifdef _OPENMP
-		omp_set_dynamic(0);
-		omp_set_num_threads(threads);
-	#endif
 	int i,h;
 	int world_size;
 	MPI_Comm_size(MPI_COMM_WORLD, &world_size);

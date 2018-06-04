@@ -42,46 +42,42 @@ int main()
 	string line;
 	if(config_file.is_open())
 	{
-		getline(config_file, line); //1
+		getline(config_file, line);
 
-		getline(config_file, compiler_name); //2
-		
-		getline(config_file, line); //3
-
-		getline(config_file, line); //4
+		getline(config_file, line); 
 		int values_number = stoi(line,nullptr, 10);
 
-		for(int i = 0; i < values_number; i++) //5-10
+		for(int i = 0; i < values_number; i++) 
 		{
 			getline(config_file, line);
 			num_thread_values.push_back(stoi(line, nullptr, 10));
 		}
 
-		getline(config_file, line); //11
+		getline(config_file, line); 
 
-		getline(config_file, line); //12
+		getline(config_file, line); 
 		values_number = stoi(line,nullptr, 10);
 
-		for(int i = 0; i < values_number; i++) //13-18
+		for(int i = 0; i < values_number; i++) 
 		{
 			getline(config_file, line);
 			num_process_values.push_back(stoi(line, nullptr, 10));
 		}
 
-		getline(config_file, line); //19
+		getline(config_file, line); 
 
-		getline(config_file, line); //20
+		getline(config_file, line); 
 		values_number = stoi(line,nullptr, 10);
 
-		for(int i = 0; i < values_number; i++) //21-24
+		for(int i = 0; i < values_number; i++) 
 		{
 			getline(config_file, line);
 			type_bind_values.push_back(stoi(line, nullptr, 10));
 		}
 
-		getline(config_file,line); //25
+		getline(config_file,line); 
 
-		getline(config_file,line); //26
+		getline(config_file,line); 
 		repetitions = stoi(line, nullptr, 10);
 
 		config_file.close();
@@ -124,7 +120,11 @@ int main()
 					command += "mpirun -np ";
 					command += to_string(num_process);
 					command += " ./target.out ";
-					command += to_string(num_thread);
+
+					ifstream run_commands;
+					run_commands.open("../../target/command_line_parameters.txt");
+					getline(run_commands, line);
+					command += line;
 
 					//setup global variables
 					system((string("export OMP_NUM_THREADS=") + to_string(num_thread)).c_str());

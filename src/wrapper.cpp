@@ -48,8 +48,15 @@ int main()
 	command += "mpirun -np ";
 	command += std::to_string(num_process);
 	command += " ./target.out ";
-	command += std::to_string(num_thread);
 	
+	ifstream run_commands;
+	string line;
+	run_commands.open("../../target/command_line_parameters.txt");
+	getline(run_commands, line);
+	command += line;
+	
+	command += " > output.txt";
+
 	//setup global variables
 	system((string("export OMP_NUM_THREADS=") + to_string(num_thread)).c_str());
 	system((string("export OMP_PROC_BIND=") + actual_type_bind).c_str());
@@ -58,5 +65,4 @@ int main()
 	system(command.c_str());
 	margot::bar::stop_monitor();
 	margot::bar::log();
-	system("rm target.out");
 }
