@@ -9,7 +9,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <astrm.hpp>
-
+#include <unistd.h>
 
 using namespace std;
 
@@ -17,7 +17,7 @@ int main()
 {
 	margot::init();
 	while(!astrm::in_design_space_exploration())
-
+		usleeep(100000);
 	string stdname = "";
 	string mpiname = "";
 	int num_thread = 1;
