@@ -1,6 +1,6 @@
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
-git clone -b online https://gitlab.com/margot_project/core.git
+git clone https://gitlab.com/margot_project/core.git
 cd core
 mkdir build
 cd build
