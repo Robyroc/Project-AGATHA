@@ -1,5 +1,3 @@
-§The following line contains the name of the script file which has to compile the source
-compile.sh
 §The next lines contains the number of the knob values followed by their respective value
 6
 1
