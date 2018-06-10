@@ -16,8 +16,6 @@ using namespace std;
 int main()
 {
 	margot::init();
-	while(!astrm::in_design_space_exploration())
-
 	string stdname = "";
 	string mpiname = "";
 	int num_thread = 1;
